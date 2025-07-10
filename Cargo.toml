@@ -1,0 +1,21 @@
+[package]
+name = "bbgmc"
+version = "0.1.0"
+edition = "2024"
+build = "build.rs"
+
+[dependencies]
+ddc = "0.2.2"
+ddc-hi = "0.4.1"
+ddc-winapi = "0.2.2"
+press-btn-continue = "0.2.0"
+rdev = "0.5.3"
+winapi = "0.3.9"
+windows = { version = "0.61.2", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_Console",
+] }
+
+[build-dependencies]
+winres = "0.1"
