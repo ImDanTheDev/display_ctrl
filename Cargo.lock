@@ -59,23 +59,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e16d2d3311acee920a9eb8d33b8cbc1787ce4a264e85f964c2404b969bdcd487"
 
 [[package]]
-name = "bbgmc"
-version = "0.1.0"
-dependencies = [
- "clap",
- "ddc",
- "ddc-hi",
- "ddc-winapi",
- "press-btn-continue",
- "rdev",
- "serde",
- "serde_json",
- "winapi",
- "windows",
- "winres",
-]
-
-[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -152,6 +135,27 @@ dependencies = [
  "foreign-types 0.3.2",
  "libc",
  "objc",
+]
+
+[[package]]
+name = "color-print"
+version = "0.3.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3aa954171903797d5623e047d9ab69d91b493657917bdfb8c2c80ecaf9cdb6f4"
+dependencies = [
+ "color-print-proc-macro",
+]
+
+[[package]]
+name = "color-print-proc-macro"
+version = "0.3.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "692186b5ebe54007e45a59aea47ece9eb4108e141326c304cdc91699a7118a22"
+dependencies = [
+ "nom 7.1.3",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -317,6 +321,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "display_ctrl"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "color-print",
+ "ddc",
+ "ddc-hi",
+ "ddc-winapi",
+ "press-btn-continue",
+ "rdev",
+ "serde",
+ "serde_json",
+ "winapi",
+ "windows",
+ "winres",
+]
+
+[[package]]
 name = "dtoa"
 version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -328,7 +350,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "24ce75530893d834dcfe3bb67ce0e7dec489484e7cb4423ca31618af4bab24fe"
 dependencies = [
- "nom",
+ "nom 3.2.1",
 ]
 
 [[package]]
@@ -502,7 +524,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8eb961d01a3bb07969cfa276be2ab88c31d0fefa77a872696832732d6e9ec094"
 dependencies = [
  "mccs",
- "nom",
+ "nom 3.2.1",
 ]
 
 [[package]]
@@ -512,7 +534,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3cdaa8fe19a1a1918becc1b8cbbbdc1058bc71411dff4de0a6ec6b5269f49d38"
 dependencies = [
  "mccs",
- "nom",
+ "nom 3.2.1",
  "serde",
  "serde_derive",
  "serde_yaml",
@@ -534,12 +556,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32a282da65faaf38286cf3be983213fcf1d2e2a58700e808f83f4ea9a4804bc0"
 
 [[package]]
+name = "minimal-lexical"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
+
+[[package]]
 name = "nom"
 version = "3.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "05aec50c70fd288702bcd93284a8444607f3292dbdf2a30de5ea5dcdbe72287b"
 dependencies = [
  "memchr 1.0.2",
+]
+
+[[package]]
+name = "nom"
+version = "7.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d273983c5a657a70a3e8f2a01329822f3b8c8172b73826411a55751e404a0a4a"
+dependencies = [
+ "memchr 2.7.5",
+ "minimal-lexical",
 ]
 
 [[package]]

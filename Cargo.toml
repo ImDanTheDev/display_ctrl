@@ -1,11 +1,12 @@
 [package]
-name = "bbgmc"
+name = "display_ctrl"
 version = "0.1.0"
 edition = "2024"
 build = "build.rs"
 
 [dependencies]
 clap = { version = "4.5.41", features = ["derive"] }
+color-print = "0.3.7"
 ddc = "0.2.2"
 ddc-hi = "0.4.1"
 press-btn-continue = "0.2.0"

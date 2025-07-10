@@ -68,12 +68,24 @@ fn apply_actions(actions: &[MonitorAction]) {
 }
 
 #[derive(Debug, Parser)]
+#[clap(
+    about = "A lightweight CLI utility for controlling displays using the DDC/CI protocol.\nMultiple on-start and on-quit actions can be provided by specifying the flag multiple times.",
+    after_help = color_print::cstr!(r#"<bold><underline>Example:</underline></bold>
+  Dims the backlight of a specific monitor on start, then brightens it when program exits.
+  $ display_ctr --on-start '{"monitor_filter": {"ModelName": "100140682"}, "code": 16, "value": 10}' --on-quit '{"monitor_filter":{"ModelName": "100140682"}, "code": 16, "value": 100}'
+    "#)
+)]
 struct DisplayCtrlCli {
-    #[clap(long, short, action)]
+    #[clap(
+        long,
+        short,
+        action,
+        help = "Waits for a global key or button press before running `on_quit` actions and exiting"
+    )]
     auto_exit: bool,
-    #[clap(long, default_values_t = Vec::<MonitorAction>::new())]
+    #[clap(long, short = 's', default_values_t = Vec::<MonitorAction>::new(), help="JSON-formatted DDC/CI action to run when the program starts")]
     on_start: Vec<MonitorAction>,
-    #[clap(long, default_values_t = Vec::<MonitorAction>::new())]
+    #[clap(long, short = 'q', default_values_t = Vec::<MonitorAction>::new(), help="JSON-formatted DDC/CI action to run before the program exits")]
     on_quit: Vec<MonitorAction>,
 }
 
