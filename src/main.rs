@@ -3,10 +3,10 @@ use std::{fmt::Display, str::FromStr};
 use clap::Parser;
 use ddc::FeatureCode;
 use ddc_hi::{Ddc, Display as DdcDisplay};
-use rdev::{EventType, ListenError, listen};
+use rdev::{EventType, listen};
 use serde::Deserialize;
 
-fn main() -> Result<(), ListenError> {
+fn main() {
     let args: DisplayCtrlCli = DisplayCtrlCli::parse();
 
     make_console_window_on_top();
@@ -16,19 +16,23 @@ fn main() -> Result<(), ListenError> {
     if args.auto_exit {
         apply_actions(&args.on_quit);
     } else {
-        listen(move |e| match e.event_type {
+        let listener_quit_actions = args.on_quit.clone();
+        if let Err(err) = listen(move |e| match e.event_type {
             EventType::KeyPress(_)
             | EventType::KeyRelease(_)
             | EventType::ButtonPress(_)
             | EventType::ButtonRelease(_) => {
-                apply_actions(&args.on_quit);
+                apply_actions(&listener_quit_actions);
                 std::process::exit(0);
             }
             _ => {}
-        })?
+        }) {
+            eprintln!(
+                "Error while listening for global input. Running quit actions now. Error: {err:?}"
+            );
+            apply_actions(&args.on_quit);
+        }
     }
-
-    Ok(())
 }
 
 fn apply_actions(actions: &[MonitorAction]) {
