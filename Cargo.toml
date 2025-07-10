@@ -5,12 +5,16 @@ edition = "2024"
 build = "build.rs"
 
 [dependencies]
+clap = { version = "4.5.41", features = ["derive"] }
 ddc = "0.2.2"
 ddc-hi = "0.4.1"
-ddc-winapi = "0.2.2"
 press-btn-continue = "0.2.0"
 rdev = "0.5.3"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
 winapi = "0.3.9"
+[target.'cfg(windows)'.dependencies]
+ddc-winapi = "0.2.2"
 windows = { version = "0.61.2", features = [
     "Win32_Foundation",
     "Win32_UI_WindowsAndMessaging",
