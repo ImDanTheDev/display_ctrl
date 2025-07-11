@@ -50,6 +50,7 @@ jobs:
       - name: Create PR
         uses: peter-evans/create-pull-request@v7
         with:
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
           delete-branch: true
           base: "main"
           title: "Bump Version after Release"
