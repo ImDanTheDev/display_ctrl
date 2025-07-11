@@ -41,14 +41,14 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: dtolnay/rust-toolchain@nightly
         with:
-          targets: x86_64-pc-windows-gnu, x86_64-unknown-linux-musl, aarch64-unknown-linux-musl
+          targets: x86_64-pc-windows-gnu, x86_64-unknown-linux-musl, aarch64-unknown-linux-musl libudev-dev
           components: clippy
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt update
-          sudo apt install gcc-mingw-w64-x86-64 musl musl-tools gcc-aarch64-linux-gnu libwayland-dev
+          sudo apt install gcc-mingw-w64-x86-64 musl musl-tools gcc-aarch64-linux-gnu libwayland-dev libudev-dev
           curl https://apt.llvm.org/llvm.sh | sudo bash -s 17
 
       - name: Install Rust cache
