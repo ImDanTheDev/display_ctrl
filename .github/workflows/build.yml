@@ -41,7 +41,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: dtolnay/rust-toolchain@nightly
         with:
-          targets: x86_64-pc-windows-gnu, x86_64-unknown-linux-musl, aarch64-unknown-linux-musl libudev-dev
+          targets: x86_64-pc-windows-gnu, x86_64-unknown-linux-musl, aarch64-unknown-linux-musl
           components: clippy
 
       - name: Install Linux dependencies
