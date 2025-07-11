@@ -41,5 +41,4 @@ jobs:
             Compiled binaries for display_ctrl version `${{ env.TAG }}` ([changelog](${{ github.server_url }}/${{ github.repository }}/blob/main/CHANGELOG.md#${{ env.MD_HEADER }}))
 
             The provided binaries are for:
-            - GNU Windows (x64 windows gnu) (i.e. Cygwin/MinGW)
             - Windows (x64 windows msvc)
