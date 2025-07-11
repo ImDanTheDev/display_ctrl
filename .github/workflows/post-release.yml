@@ -9,7 +9,7 @@ env:
 
 jobs:
   bump:
-    if: github.repository == 'bevyengine/bevy'
+    if: github.repository == 'ImDanTheDev/display_ctrl'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,11 +25,11 @@ jobs:
           # Set the commit author to the github-actions bot. See discussion here for more information:
           # https://github.com/actions/checkout/issues/13#issuecomment-724415212
           # https://github.community/t/github-actions-bot-email-address/17204/6
-          git config user.name 'Bevy Auto Releaser'
+          git config user.name 'Display CTRL Auto Releaser'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           # Read the current version from Cargo.toml
           current_version=$(cargo metadata --format-version 1 --no-deps | \
-            jq --raw-output '.packages | .[] | select(.name == "bevy").version')
+            jq --raw-output '.packages | .[] | select(.name == "display_ctrl").version')
           # Sanity check: current version should be 0.X.Y-dev
           if ! grep -q '^0\.[0-9]\+\.[0-9]\+-dev$' <<< "${current_version}"; then
             echo "Invalid version (not in 0.X.Y-dev format): ${current_version}"
@@ -45,12 +45,7 @@ jobs:
             --execute \
             --no-tag \
             --no-confirm \
-            --no-push \
-            --exclude ci \
-            --exclude errors \
-            --exclude bevy_mobile_example \
-            --exclude build-wasm-example \
-            --exclude no_std_library
+            --no-push
 
       - name: Create PR
         uses: peter-evans/create-pull-request@v7
