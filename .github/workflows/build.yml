@@ -20,8 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        # os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CARGO_TERM_COLOR: always
@@ -49,7 +48,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt update
-          sudo apt install gcc-mingw-w64-x86-64 musl musl-tools gcc-aarch64-linux-gnu libwayland-dev libudev-dev libx11-dev libxi-dev
+          sudo apt install gcc-mingw-w64-x86-64 musl musl-tools gcc-aarch64-linux-gnu libwayland-dev libudev-dev libx11-dev libxi-dev libxtst-dev
           curl https://apt.llvm.org/llvm.sh | sudo bash -s 17
 
       - name: Install Rust cache
