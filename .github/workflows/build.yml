@@ -1,0 +1,91 @@
+name: Build
+
+on:
+  push:
+    # Do not run on tag pushes
+    branches: '**'
+    # Only run when;
+    paths:
+      # any Rust code has changed,
+      - "**.rs"
+      # this workflow has changed,
+      - ".github/workflows/build.yml"
+      # dependencies have changed,
+      - "Cargo.lock"
+  # or a rebuild is manually called.
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CARGO_TERM_COLOR: always
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create `out/`
+        run: mkdir out
+
+      # Install Rust on the various platforms
+
+      - name: Install Rust for Windows
+        if: matrix.os == 'windows-latest'
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: clippy
+
+      - name: Install Rust for Linux
+        if: matrix.os == 'ubuntu-latest'
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: x86_64-pc-windows-gnu, x86_64-unknown-linux-musl, aarch64-unknown-linux-musl
+          components: clippy
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install gcc-mingw-w64-x86-64 musl musl-tools gcc-aarch64-linux-gnu libwayland-dev
+          curl https://apt.llvm.org/llvm.sh | sudo bash -s 17
+
+      - name: Install Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Lint code
+        run: cargo clippy
+
+      - name: Build Windows MSVC
+        if: matrix.os == 'windows-latest'
+        run: |
+          cargo build --target=x86_64-pc-windows-msvc --release
+          Compress-Archive -Path "target\x86_64-pc-windows-msvc\release\display_ctrl.exe" -DestinationPath "out\display_ctrl_windows_msvc.zip"
+
+      - name: Build Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cargo build --target=x86_64-unknown-linux-musl --release
+          zip -r out/display_ctrl_linux.zip -j target/x86_64-unknown-linux-musl/release/display_ctrl
+
+      - name: Build ARM Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cargo rustc --target=aarch64-unknown-linux-musl --release -- -Clink-self-contained=yes -Clinker=rust-lld
+          zip -r out/display_ctrl_linux_arm64.zip -j target/aarch64-unknown-linux-musl/release/display_ctrl
+        env:
+          CC_aarch64_unknown_linux_musl: clang-17
+
+      - name: Build Windows GNU
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cargo build --target=x86_64-pc-windows-gnu --release
+          zip -r out/display_ctrl_windows_gnu.zip -j target/x86_64-pc-windows-gnu/release/display_ctrl.exe
+
+      - name: Upload build artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.os }}
+          path: out/display_ctrl*.zip
+          if-no-files-found: error

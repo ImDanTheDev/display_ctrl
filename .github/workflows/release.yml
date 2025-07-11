@@ -1,0 +1,46 @@
+name: Publish and Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags: "*"
+
+jobs:
+  gh-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download artifacts
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow_conclusion: success
+          workflow: build.yml
+          path: ./out
+
+      - name: Create sha256sum for Scoop
+        run: sha256sum ./out/**/display_ctrl_windows_msvc.zip | cut -d ' ' -f 1 > ./out/display_ctrl_windows_msvc.zip.sha256
+
+      # Remove the dots for the markdown header
+      - name: MD Header
+        run: echo "MD_HEADER=$(git describe --tags --abbrev=0 | sed 's/\.//g')" >> $GITHUB_ENV
+
+      - name: Get the latest tag
+        run: echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./out/**
+          name: display_ctrl ${{ env.TAG }}
+          tag_name: ${{ env.TAG }}
+          body: |
+            Compiled binaries for display_ctrl version `${{ env.TAG }}` ([changelog](${{ github.server_url }}/${{ github.repository }}/blob/main/CHANGELOG.md#${{ env.MD_HEADER }}))
+
+            The provided binaries are for:
+            - Linux ARM (aarch64 linux musl)
+            - Linux (x64 linux musl)
+            - GNU Windows (x64 windows gnu) (i.e. Cygwin/MinGW)
+            - Windows (x64 windows msvc)
